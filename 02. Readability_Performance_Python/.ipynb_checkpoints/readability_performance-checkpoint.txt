@@ -1,0 +1,4 @@
+Markdown File w/ Class Notes: https://github.com/mattdemography/DA_6223_Spring2021/blob/main/02_Readability_Performance_Python/Readability_%26_Performance.ipynb
+
+Lecture Video: https://github.com/mattdemography/DA_6223_Spring2021/blob/main/02_Readability_Performance_Python/Lecture_Video.md
+
