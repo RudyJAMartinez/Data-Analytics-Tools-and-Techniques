@@ -291,5 +291,4 @@ news_df.to_csv(f'07. {stock} Sentiment Analysis.csv')
 mean_df = news_df.groupby(['date']).mean()
 
 mean_df.plot(kind = 'bar')
-plt.figure(figsize = (10, 8))
 plt.show()
