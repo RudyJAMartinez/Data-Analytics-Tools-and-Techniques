@@ -285,3 +285,30 @@ fin_strength_scores = {'Profitability Score': p_score,
 
 fin_strength_df = pd.DataFrame(list(fin_strength_scores.items()),columns = ['Scoring Criteria','Score']) 
 fin_strength_df.to_csv(f'06. {stock} Piotroski Score Results.csv')
+
+
+
+
+
+# #### **5.** Scrape Yahoo News Articles for langauge associated with "positive" sentiment for the security
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
