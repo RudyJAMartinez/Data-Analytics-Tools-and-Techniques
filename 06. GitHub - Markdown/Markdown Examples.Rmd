@@ -1,0 +1,89 @@
+---
+title: "Test_Markdown"
+author: "Matt"
+date: "3/22/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# R Markdown
+## R Markdown
+### *R Markdown*
+#### **R Markdown**
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. ~~For more~~ details on using R Markdown [see here](http://rmarkdown.rstudio.com).
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+Add Words
+```{r cars1}
+mean(cars$speed)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+d<-58
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+
+This quarter we saw sales of **`r mean(cars$speed)*mean(cars$speed)`** and the square of that is `r mean(cars$speed)`. Can we call a value from R environment `r print(d)`?
+
+
+
+## Instructions
+
+Use the program below (beginning line 13) to figure out who you will be critiquing. You will critique two of your colleagues' work and provide feedback for them to produce their best work. Remember this is to help them out so do not be mean, but also do not hold back. Be sure to highlight areas of success as equally as areas of failure. Use the template below the code to provide them this feedback. You can find the [project links here](https://docs.google.com/spreadsheets/d/1xAiea3WAt-7ANAYtzhjFfRRkSTCQlcu123y7hqizJso/edit#gid=0)
+
+**Be sure to change the name of the project in the title above and in the document title.** This is the project number you are critiquing and should be included in the output file so that the document name reads 'Critique_of_Project##.docx'. Once you are finished, e-mail me both documents (one document per critique) and I will upload them to the 'Peer_Reviewed_Work' folder so that your peers can view them. Do not e-mail me the .Rmd file. These reviews are due by **Friday, March 26th at 5:30pm CST**. For ease you can use this markdown file to fill out your responses and knit which will produce a word document for you.
+
+```{r setup1, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+#Insert Your Number Here
+your_num<-21
+set.seed(134)
+s<-sample(1:33, 33, replace=F)
+pos<-match(your_num, s)
+if(pos>1 & pos<33){
+  feedback_nums<-c(s[pos+1], s[pos-1])
+}else if(pos==1){
+  feedback_nums<-c(s[pos+1], s[length(s)])
+}else if(pos==33){
+  feedback_nums<-c(s[length(pos)], s[pos-1])
+}
+print(paste0("You will provide feeback for projects ", feedback_nums[1], " and ", feedback_nums[2]))
+```
+## Feedback Below
+
+**What is their topic on?**
+
+* *Is the title consistent with the topic?*
+* *In other words does the title make sense for the project?*
+
+**Are the objectives of the project clearly identifiable?**
+
+* *What are they wanting to study?*
+* *What is the motivation of this project?*
+* *What does the presenter hope to accomplish with this project?*
+
+**What data are used?**
+
+* *What website(s) are scraped?*
+* *Are other data brought in from outside sources?*
+* *If so, what are they and how do they add to the project?*
+
+**What is your overall impression of the project?**
+
+**Other encouragements/critiques you would like to provide to your colleague in order for them to have a more refined project.**
+
