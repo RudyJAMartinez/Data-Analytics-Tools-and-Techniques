@@ -1,0 +1,186 @@
+---
+title: "Creating Shiny Apps"
+author: "Matthew J. Martinez, PhD"
+date: "4/5/2021"
+output: html_document
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Shiny Basics
+
+What is a Shiny app? Well, think of Shiny apps as light applets that allow you to create interactive visualizations of your data in real-time. Shiny apps allow end-users to manipulate tables and graphs, curate new data, filter data for new visualizations, and a host of other items that put the data story in the hands of users. You can find some great examples of [Shiny apps here](https://shiny.rstudio.com/gallery/). Recently, [Shiny apps have been used to track Covid-19](https://texas2036.shinyapps.io/covid_tracker/).I have some personal apps that I created for [demonstration purposes](https://matthew-j-martinez.shinyapps.io/Organizations_Test_Data/) as well. 
+
+It may be helpful to refer to the following resources while developing shiny apps including the [Shiny Cheatsheet](https://shiny.rstudio.com/images/shiny-cheatsheet.pdf), this [tutorial](https://shiny.rstudio.com/tutorial/), these [Shiny instructional videos](https://resources.rstudio.com/shiny-2), and especially this [Shiny workshop](https://github.com/mattdemography/shinymark) by Daniel Kaplan which was heavily referenced in the creation of this lesson.
+
+At the end of these few weeks you will be able to [deploy](https://www.shinyapps.io/) a live app that can be viewed on your computer, phone, tablet, or other internet device. You will need to create a user account with https://www.shinyapps.io/ in order to deploy and share your Shiny app. You can use your Github account or Google account as well to speed up registration and logging in. You do not have to deploy a Shiny app to view it as you can host the app on your local computer. If you desire others to view and interact with your app then you will need to deploy it.  
+
+#### **Shiny App Components**  
+**The Package**  
+install.packages("shiny") - Installs the shiny package.
+library(shiny) - This brings in the library.
+
+**The User Interface (ui)**  
+ui <- fluidPage() - This is the user interface for the application. It controls the layout and appearance of the application.
+
+**The Server Instructions**  
+server <- function(input, output) {} - The server function tells the app how to be built and operate.
+
+**The App**  
+shinyApp(ui = ui, server = server) - This knits the two components together.
+
+All shiny apps will have this very basic template. They obviously will be much more detailed as you build your app, but these components are necessary for your app to properly function.
+
+#### **Starting a Shiny App**  
+You start building a shiny app by clicking *File -> New File -> Shiny Web App* and choosing a name for the application. The code below creates the attached application. We will then go through each section so that you can better understand the app components.
+
+
+```{r nick, echo=TRUE}
+#Load the Library
+library(shiny)
+library(ggplot2)
+load(url("https://raw.githubusercontent.com/mattdemography/STA_6233_Spring2021/master/Data/nic-cage.RData"))
+
+# Define UI for application that draws a histogram
+ui <- fluidPage(
+
+    # Application title
+    titlePanel("Nicolas Cage \"American Hero\""),
+
+    # Sidebar layout
+    sidebarLayout(
+        #Inputs: Select which inputs from the data we want to display
+        sidebarPanel(
+            #Select variable for y-axis
+                  selectInput(inputId = "y", 
+                  label = "Y-axis:",
+                  choices = c("RottenTomatoes"), 
+                  selected = "Rating"),
+            #Select X-axix variables
+                  selectInput(inputId = "x", 
+                  label = "X-axis:",
+                  choices = c("Voice", "Year"), 
+                  selected = "Year")
+        ),
+
+        #Output: Type of plot
+        mainPanel(
+           plotOutput(outputId = "FreqTab") #Any name can go where "FreqTab" is, but be sure to keep it consistent with name in output$FreqTab in the server section
+        )
+    )
+)
+
+# Define server logic required to draw a histogram
+server <- function(input, output) {
+
+    output$FreqTab <- renderPlot({
+        # draw the histogram with the specified number of bins
+      ggplot(t, aes_string(x=input$x, y=input$y)) + geom_point() #Notice the difference between the ggplots
+    })
+}
+
+# Run the application 
+shinyApp(ui = ui, server = server)
+
+```
+  
+#### **Setting up the App **  
+
+Let's take a closer look at this simple app. First notice that we bring in two different libraries and load a dataset of the format 'RData' from github. Loading .csv directly does not work in the shiny environment. You will need to either 1) host the data remotely via a cloud service as I am here, 2) you will need to create a data folder inside of your Shiny app folder and load a .RData file or .rds file, or 3) load the data into the script itself like the template example that appears when you start your first shiny app using RStudio.
+
+```{r libs, eval=FALSE}
+
+#Load the Library
+library(shiny)
+library(ggplot2)
+load(url("https://raw.githubusercontent.com/mattdemography/STA_6233/master/Data/nic-cage.RData"))
+```
+  
+#### **Examining the UI**
+  
+The **ui** begins with the *fluidPage()* function and includes items like the shiny app title, and the types of interactives you desire to have in the app. Next we see the *titlePanel()* function which applies a large title to your Shiny app. This element is not necessary, but often used.
+
+```{r ui, eval=FALSE}
+
+ui <- fluidPage(
+
+    # Application title
+    titlePanel("Nicolas Cage \"American Hero\""),
+```    
+  
+Now we see that we setup the app to have a sidebar and a main panel area. The sidebar will contain two input options - one being the Y-axis and the other being the X-axis for the ggplot made in the **server** portion of the Shiny code. The options for the user in the y-axis will be 'RottenTomatoes' and the default option will be 'RottenTomatoes'. The options for the user in the x-axis will be 'Voice' and 'Year' with the default set to 'Year'. Another important item to note in the *sidebarPanel()* function is the use of 'selectInput(inputID="y")' and selectInput(inputID="x"). This 'y' and 'x' inputID will link to the formation of the ggplot found in the **server** portion of the code as we will see later. 
+
+```{r ui2, eval=FALSE}    
+# Sidebar layout
+    sidebarLayout(
+        #Inputs: Select which inputs from the data we want to display
+        sidebarPanel(
+            #Select variable for y-axis
+                  selectInput(inputId = "y", 
+                  label = "Y-axis:",
+                  choices = c("RottenTomatoes"), 
+                  selected = "RottenTomatoes"),
+            #Select X-axix variables
+                  selectInput(inputId = "x", 
+                  label = "X-axis:",
+                  choices = c("Voice", "Year"), 
+                  selected = "Year")
+        ),
+```
+
+The mainPanel contains the output of the selections in the sidebarPanel. In this case I am calling this "FreqTab" and this will be referenced in the **server** portion of the code. This name can be anything as long as you keeep it consistent in your future references.
+
+```{r ui3, eval=FALSE}
+#Output: Type of plot
+        mainPanel(
+           plotOutput(outputId = "FreqTab") #Any name can go where "FreqTab" is, but be sure to keep it consistent with name in output$FreqTab in the server section
+        )
+    )
+```
+  
+#### **Exploring the Server**
+  
+In the **server** portion of the Shiny app we see a *function()* with two arguments: 'input' and 'output'. First notice 'output\$FreqTab' is a reactive plot (using function *renderPlot()*) with the 'FreqTab' name used in the mainPanel section above. Now let's examine the type of reactive plot that will be displayed in the mainPanel section of the app. It is a familiar function *ggplot()* except it is a bit different than we are used to seeing. If I were making this plot outside of a reactive plot I would probably show something like this
+`ggplot(t, aes_string(x=t$Voice, y=t$RottenTomatoes))` for a scatter plot of Rotten Tomatoes ratings by the dichotomous 'Voice' variable or `ggplot(t, aes_string(x=t$Year, y=t$RottenTomatoes))` for a scatter plot of Rotten Tomatoes ratings by the continuous 'Year' variable.  
+
+Insetead we see `ggplot(t, aes_string(x=input$x, y=input$y))` which allows the plot to be reactive because the value of 'x' and 'y' can change as the user chooses different values.
+
+```{r server, eval=FALSE}
+# Define server logic required to draw a histogram
+server <- function(input, output) {
+
+    output$FreqTab <- renderPlot({
+        # draw the histogram with the specified number of bins
+      ggplot(t, aes_string(x=input$x, y=input$y)) + geom_point() #Notice the difference between the ggplots
+    })
+}
+```
+
+#### **Finishing the App: The Server**
+
+Finally, now that we have brought in relevant packages and data, created the user interface, designed how the app we are ready to bring it all together with the last piece of code using the function *shinyApp()*.
+
+```{r finished, eval=FALSE}
+
+# Run the application 
+shinyApp(ui = ui, server = server)
+
+```
+
+
+#### **Practice**
+  
+Now, try to practice running the shiny app from above, but this time give the user the option to change the point colors. Hint, you will need to show something like this in the UI:
+```{r practice, eval=FALSE}
+ 
+# Select Colors
+      selectInput(inputId = "", 
+                  label = "",
+                  choices = c(), 
+                  selected = ""),
+```
+  
+What else do you need to remember to change in the code besides the UI portion?
