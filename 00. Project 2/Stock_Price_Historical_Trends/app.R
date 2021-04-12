@@ -1,24 +1,30 @@
 library(shiny)
 library(quantmod)
+library(shinythemes)
 
 # Define UI for application that draws a histogram
 ui = fluidPage(
-
+    
+    theme = shinytheme("journal"),
+    
     # Application title
-    titlePanel("Stock Price Time Series Analysis"),
-
+    titlePanel("Historical Trends",),
+    
     sidebarLayout(
         sidebarPanel(
             textInput(inputId = "symbol", "Enter Ticker Symbol" ,"SPY"),
             
             dateRangeInput("dates",
-                       "Date range",
-                       start = "2021-01-01",
-                       end = as.character(Sys.Date())),
+                           "Date range",
+                           start = "2021-01-01",
+                           end = as.character(Sys.Date())),
+            
+            width = 4,
             
             br(),
             br()),
-        mainPanel(plotOutput(outputId = "results"))
+        mainPanel(plotOutput(outputId = "results"), width = 8),
+        position = c("left", "right")
     )
 )
 
@@ -33,10 +39,10 @@ server <- function(input, output) {
     })
     
     output$results = renderPlot({
-
-        chartSeries(dataInput(), name = input$symbol, theme = chartTheme("black"),
-                    type = "matchsticks", TA = "addSMA()")
-        addVo()
+        
+        chartSeries(dataInput(), name = input$symbol, theme = chartTheme("white"),
+                    type = "candlesticks", TA = "addSMA()")
+        addRSI(n=14, maType="EMA")
     })
 }
 
