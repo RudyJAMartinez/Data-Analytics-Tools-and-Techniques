@@ -12,7 +12,14 @@ ui = fluidPage(
     
     sidebarLayout(
         sidebarPanel(
-            textInput(inputId = "symbol", "Enter Ticker Symbol" ,"SPY"),
+            textInput(inputId = "symbol", h4("Enter Ticker Symbol"),"SPY"),
+            
+            radioButtons(inputId = "metric", label = h4("Metric"), 
+                         choices = list("addSMA()" = 1, 
+                                        "addEMA()" = 2, 
+                                        "addWMA()" = 3, 
+                                        "addDEMA()" = 4), 
+                         selected = 1),
             
             dateRangeInput("dates",
                            "Date range",
@@ -41,7 +48,7 @@ server <- function(input, output) {
     output$results = renderPlot({
         
         chartSeries(dataInput(), name = input$symbol, theme = chartTheme("white"),
-                    type = "candlesticks", TA = "addSMA()")
+                    type = "candlesticks")
         addRSI(n=14, maType="EMA")
     })
 }
