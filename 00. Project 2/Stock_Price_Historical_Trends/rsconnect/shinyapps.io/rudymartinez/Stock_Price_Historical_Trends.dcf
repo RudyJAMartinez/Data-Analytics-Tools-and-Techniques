@@ -5,8 +5,8 @@ account: rudymartinez
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 3946495
-bundleId: 4459306
+bundleId: 4577718
 url: https://rudymartinez.shinyapps.io/Stock_Price_Historical_Trends/
-when: 1618205760.72718
+when: 1620585491.91065
 asMultiple: FALSE
 asStatic: FALSE

@@ -8,27 +8,30 @@ ui = fluidPage(
     theme = shinytheme("journal"),
     
     # Application title
-    titlePanel("Historical Trends",),
+    titlePanel("Stock Evaluation Tool",),
     
     sidebarLayout(
         sidebarPanel(
             textInput(inputId = "symbol", h4("Enter Ticker Symbol"),"SPY"),
-            
-            radioButtons(inputId = "metric", label = h4("Metric"), 
-                         choices = list("addSMA()" = 1, 
-                                        "addEMA()" = 2, 
-                                        "addWMA()" = 3, 
-                                        "addDEMA()" = 4), 
-                         selected = 1),
             
             dateRangeInput("dates",
                            "Date range",
                            start = "2021-01-01",
                            end = as.character(Sys.Date())),
             
+            p(strong("Technical Analysis")),
+            checkboxInput("ta_vol", label = "volume"),
+            checkboxInput("ta_sma", label = "Simple Moving Average"),
+            checkboxInput("ta_ema", label = "Exponential Moving Average"),
+            checkboxInput("ta_wma", label = "Weighted Moving Average"),
+            checkboxInput("ta_bb", label = "Bolinger Bands"),
+            checkboxInput("ta_momentum", label = "Momentum"),
+            
             width = 4,
             
             br(),
+            actionButton("chart_act", "Add Technical Analysis"),
+            
             br()),
         mainPanel(plotOutput(outputId = "results"), width = 8),
         position = c("left", "right")
@@ -45,11 +48,22 @@ server <- function(input, output) {
                    auto.assign = FALSE)
     })
     
-    output$results = renderPlot({
+    TAInput = reactive({
+        if (input$chart_act == 0)
+            return("NULL")
         
+        tas = isolate({c(input$ta_vol, input$ta_sma, input$ta_ema, input$ta_wma,
+                         input$ta_bb, input$ta_momentum)})
+        
+        funcs = c(addVo(), addSMA(), addEMA(), addWMA(), addBBands(), addMomentum())
+        
+        if (any(tas)) funcs [tas]
+        else "NULL"
+    })
+    
+    output$results = renderPlot({
         chartSeries(dataInput(), name = input$symbol, theme = chartTheme("white"),
-                    type = "candlesticks")
-        addRSI(n=14, maType="EMA")
+                    type = "candlesticks", TA = TAInput())
     })
 }
 
